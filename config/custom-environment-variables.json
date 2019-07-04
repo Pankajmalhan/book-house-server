@@ -1,0 +1,9 @@
+{
+    "mongoDB":{
+        "user":"mongo_user",
+        "password":"mongo_Password"
+    },
+    "pg":{
+        "password":"pg_password"
+    }
+}

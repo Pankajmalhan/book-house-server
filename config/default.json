@@ -1,0 +1,9 @@
+{
+  "database":{
+    "mongoDB":{
+      "host":"mongodb+srv://<user>:<password>@cluster0-yi9np.mongodb.net/<database>?retryWrites=true&w=majority",
+      "databaseName":"book-house"
+    }
+  }
+}
+
