@@ -4,6 +4,7 @@
         "password":"mongo_Password"
     },
     "pg":{
+        "user":"pg_user",
         "password":"pg_password"
     }
 }

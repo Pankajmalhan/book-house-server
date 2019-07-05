@@ -1,0 +1,11 @@
+{
+    "database":{
+      "pg":{
+        "host":"portfoliodb.cedytd041mdm.ap-south-1.rds.amazonaws.com",
+        "port":"5432",
+        "databaseName":"portfoliodb"
+      }
+    }
+  }
+  
+  
