@@ -12,6 +12,9 @@ import EventType from "./types/Event";
 
 import AddEventMutation from "./mutattions/addEvent";
 import AddUserMutation from "./mutattions/addUser";
+import BookEvent from "./mutattions/bookEvent";
+import DeleteBooking from "./mutattions/deleteBooking";
+
 const GraphQueryType = new GraphQLObjectType({
     name: 'GrapghQueryType',
     fields: {
@@ -32,7 +35,9 @@ const RootMutationType = new GraphQLObjectType({
     name: 'RootMutationType',
     fields: () => ({
         AddEvent: AddEventMutation,
-        AddUser:AddUserMutation
+        AddUser:AddUserMutation,
+        BookEvent:BookEvent,
+        DeleteBooking:DeleteBooking
     })
 })
 

@@ -7,6 +7,7 @@ const {
 } = require('graphql');
 
 import EventModel from "../../models/type";
+import UserEventsModel from "../../models/userEvents";
 import UserType from "../types/User"
 import { GraphQLFloat } from "graphql";
 import { InputType } from "zlib";
@@ -35,7 +36,13 @@ export default {
                 if (result.length > 0) {
                     return new Error("Email already exist");
                 } else {
-                    return pgdb.addUser(input.username, input.email, hashedPassword)
+                    let user = await pgdb.addUser(input.username, input.email, hashedPassword);
+                    let userEvents = new UserEventsModel({
+                        userId: user.id,
+                        userEvents: []
+                    })
+                    userEvents.save();
+                    return user
                 }
             }).
             catch((exp: any) => {

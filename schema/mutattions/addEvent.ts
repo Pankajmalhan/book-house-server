@@ -7,6 +7,7 @@ const {
 } = require('graphql');
 
 import EventModel from "../../models/type";
+import UserEventSchema from "../../models/userEvents";
 import EventType from "../types/Event"
 import { GraphQLFloat } from "graphql";
 import { InputType } from "zlib";
@@ -18,7 +19,7 @@ const EventInputType = new GraphQLInputObjectType({
         title: { type: new GraphQLNonNull(GraphQLString) },
         price: { type: new GraphQLNonNull(GraphQLFloat) },
         description: { type: new GraphQLNonNull(GraphQLString) },
-        date: { type: new GraphQLNonNull(GraphQLString) }
+        date: { type: new GraphQLNonNull(GraphQLString) },
     }
 });
 
@@ -29,14 +30,26 @@ export default {
     args: {
         input: { type: new GraphQLNonNull(EventInputType) }
     },
-    resolve(obj: any, { input }: any) {
-        const event = new EventModel({
-            title: input.title,
-            description: input.description,
-            price: input.price,
-            date: new Date()
-        })
-        event.save();
-        return event;
+    resolve:async (obj: any, { input }: any)=> {
+        try{
+            const event = new EventModel({
+                title: input.title,
+                description: input.description,
+                price: input.price,
+                date: new Date(),
+                creator: 2
+            })
+            await event.save();
+            //ask this from abhishek how to manage with typeScript
+            let userEventsObj:any=await UserEventSchema.findOne({userId:2});
+            if(userEventsObj){
+                userEventsObj.userEvents.push(event._id)
+                await userEventsObj.save();
+            }
+            return event;
+        }
+        catch(exp){
+            throw new Error(exp);
+        }
     }
 }
