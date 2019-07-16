@@ -30,25 +30,28 @@ export default {
     args: {
         input: { type: new GraphQLNonNull(EventInputType) }
     },
-    resolve:async (obj: any, { input }: any)=> {
-        try{
+    resolve: async (obj: any, { input }: any, { isAuth, userId }: any) => {
+        try {
+            if (!isAuth) {
+                throw new Error('User is not authenticated')
+            }
             const event = new EventModel({
                 title: input.title,
                 description: input.description,
                 price: input.price,
                 date: new Date(),
-                creator: 2
+                creator: userId
             })
             await event.save();
             //ask this from abhishek how to manage with typeScript
-            let userEventsObj:any=await UserEventSchema.findOne({userId:2});
-            if(userEventsObj){
+            let userEventsObj: any = await UserEventSchema.findOne({ userId: userId });
+            if (userEventsObj) {
                 userEventsObj.userEvents.push(event._id)
                 await userEventsObj.save();
             }
             return event;
         }
-        catch(exp){
+        catch (exp) {
             throw new Error(exp);
         }
     }

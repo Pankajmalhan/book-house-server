@@ -4,8 +4,7 @@ const Schema = mongoose.Schema;
 const BookingSchema = new Schema({
     userId: {
         type: Number,
-        required: true,
-        unique: true
+        required: true
     },
     event: {
         type: Schema.Types.ObjectId,

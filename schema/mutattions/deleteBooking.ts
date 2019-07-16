@@ -25,8 +25,11 @@ export default {
     args: {
         input: { type: new GraphQLNonNull(DeleteBookingInputType) }
     },
-    resolve: async (obj: any, { input }: any, { pgdb }: any) => {
+    resolve: async (obj: any, { input }: any, { pgdb,isAuth,userId }: any) => {
         try {
+            if (!isAuth) {
+                throw new Error('User is not authenticated')
+            }
             let booking:any = await BookingSchema.findOneAndDelete({event:input.eventId});
             return booking._id
         }

@@ -26,11 +26,14 @@ export default {
     args: {
         input: { type: new GraphQLNonNull(BookingInputType) }
     },
-    resolve: async (obj: any, { input }: any, { pgdb }: any) => {
+    resolve: async (obj: any, { input }: any, { pgdb,isAuth,userId }: any) => {
         try {
+            if (!isAuth) {
+                throw new Error('User is not authenticated')
+            }
             let event = await MongoHelper.getEventById(input.eventId)
             let booking = new BookingSchema({
-                userId: 2,
+                userId: userId,
                 event: event
             })
             let bookingResult: any = await booking.save();

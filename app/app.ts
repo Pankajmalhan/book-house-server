@@ -5,6 +5,8 @@ import ncSchema from "../schema";
 import config = require('config');
 import mongoose = require('mongoose');
 import pg = require("pg");
+import AuthMiddleware from "../middleware/authMiddleware";
+import CorsMiddleware from "../middleware/cors";
 // Create a new express application instance
 const app: express.Application = express();
 //MongoDb Connection
@@ -32,20 +34,25 @@ import PgQueries from "../database/pg/pgdb";
 const pgdb = new PgQueries(pool);
 
 //Add Middlrewares
-app.use(bodyParser.json())
+app.use(bodyParser.json());
+app.use(CorsMiddleware);
+app.use(AuthMiddleware);
 
 app.get('/', function (req, res) {
-    console.log(config.get('mongoDB.user'))
     res.send('Hello World !');
 });
 
-app.use('/graphql', graphqlHTTP({
-    schema: ncSchema,
-    graphiql: true,
-    context: {
-        pgdb
-    }
-}));
+app.use('/graphql', (req,res)=>{
+    graphqlHTTP({
+        schema: ncSchema,
+        graphiql: true,
+        context: {
+            pgdb,
+            isAuth:req.isAuth,
+            userId:req.userId
+        }
+    })(req,res)
+});
 mongoose.connect(`${mongooseServer.
     replace("<user>", config.get('mongoDB.user')).
     replace('<password>', config.get('mongoDB.password')).
